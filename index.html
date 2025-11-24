@@ -1,55 +1,19 @@
-<!doctype html>
-<html lang="en"><head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Waffles</title>
-  <style>
-    :root{--bg:#0a0a0a;--panel:#111;--accent:#00ffaa;--font:Inter,system-ui,Arial,sans-serif}
-    *{box-sizing:border-box;font-family:var(--font);color:#eee}
-    html,body{height:100%;margin:0;background:var(--bg)}
-    header{display:flex;gap:8px;padding:12px;background:var(--panel);align-items:center}
-    input{flex:1;padding:10px;border:0;border-radius:6px;background:#222;color:#eee}
-    button{border:0;border-radius:6px;padding:10px 14px;background:var(--accent);color:#000;cursor:pointer;font-weight:600}
-    iframe{flex:1;border:0;width:100%;background:#000}
-    #main{display:flex;flex-direction:column;height:100vh}
-    #speedDial{display:flex;gap:12px;padding:12px;background:var(--panel);flex-wrap:wrap}
-    .tile{width:80px;height:80px;border-radius:8px;background:#222;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;transition:.2s}
-    .tile:hover{background:var(--accent);color:#000}
-  </style>
-</head>
-<body>
-<div id="main">
-  <header>
-    <button id="back">⬅</button><button id="fwd">➡</button><button id="reload">↻</button>
-    <input id="url" placeholder="Search or type URL">
-    <button id="go">Go</button>
-  </header>
-  <div id="speedDial">
-    <div class="tile" data-url="https://youtube.com" title="YouTube">▶</div>
-    <div class="tile" data-url="https://discord.com" title="Discord">💬</div>
-    <div class="tile" data-url="https://krunker.io" title="Krunker">🎯</div>
-    <div class="tile" data-url="https://reddit.com" title="Reddit">🅱</div>
-    <div class="tile" data-url="https://twitter.com" title="Twitter">🐦</div>
-  </div>
-  <iframe id="frame" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
-</div>
-<script>
-const proxy='https://api.allorigins.win/raw?url=';
-const frame=document.getElementById('frame');
-const urlBar=document.getElementById('url');
-function load(u){
-  if(!u)return;
-  if(!/^https?:\/\//i.test(u))u='https://'+u;
-  if(u.includes(' '))u='https://www.google.com/search?q='+encodeURIComponent(u)+'&pws=0';
-  frame.src=proxy+encodeURIComponent(u);
-  urlBar.value=u;
+const proxy = 'https://api.allorigins.win/raw?url=';
+const frame = document.getElementById('frame');
+const urlBar = document.getElementById('url');
+
+function load(u) {
+  if (!u) return;
+  if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+  if (u.includes(' ')) u = 'https://www.google.com/search?q=' + encodeURIComponent(u) + '&pws=0';
+  frame.src = proxy + encodeURIComponent(u);
+  urlBar.value = u;
 }
-document.getElementById('go').onclick=()=>load(urlBar.value);
-urlBar.onkeydown=e=>{if(e.key==='Enter')load(urlBar.value)};
-document.getElementById('back').onclick=()=>frame.contentWindow.history.back();
-document.getElementById('fwd').onclick=()=>frame.contentWindow.history.forward();
-document.getElementById('reload').onclick=()=>frame.src=frame.src;
-document.querySelectorAll('.tile').forEach(t=>t.onclick=()=>load(t.dataset.url));
+
+document.getElementById('go').onclick = () => load(urlBar.value);
+urlBar.onkeydown = e => { if (e.key === 'Enter') load(urlBar.value); };
+document.getElementById('back').onclick = () => frame.contentWindow.history.back();
+document.getElementById('fwd').onclick = () => frame.contentWindow.history.forward();
+document.getElementById('reload').onclick = () => frame.src = frame.src;
+document.querySelectorAll('.tile').forEach(t => t.onclick = () => load(t.dataset.url));
 load('https://www.google.com/?pws=0');
-</script>
-</body></html>
